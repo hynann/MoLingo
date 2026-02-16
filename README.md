@@ -175,4 +175,4 @@ python mogen/eval_mogen.py -d 272 -c 7.0 -a 5 -r 20 -dr {your_data_root}
 
 This code is standing on the shoulders of giants, we would like to thank the following contributors that our code is based on:
 
-[MAR](https://github.com/LTH14/mar/),  [rectified-flow](https://github.com/lqiang67/rectified-flow/tree/main), [MoMask](https://github.com/EricGuo5513/momask-codes)
+[MAR](https://github.com/LTH14/mar/),  [rectified-flow](https://github.com/lqiang67/rectified-flow/tree/main), [MoMask](https://github.com/EricGuo5513/momask-codes), [HumanML3D](https://github.com/EricGuo5513/HumanML3D), [MotionStreamer](https://github.com/zju3dv/MotionStreamer), [272-dim-Motion-Representation](https://github.com/Li-xingXiao/272-dim-Motion-Representation), [MARDM](https://github.com/neu-vi/MARDM)
