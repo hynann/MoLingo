@@ -78,7 +78,6 @@ class MoLingo(nn.Module):
 
 
     def initialize_weights(self):
-
         torch.nn.init.normal_(self.mask_token, std=.02)
         self.apply(self._init_weights)
 
@@ -129,6 +128,7 @@ class MoLingo(nn.Module):
 
     def input_process(self, x):
         x = self.z_proj(x)
+        x = self.query_pos_encoder(x)
         return x
 
     def forward_z(self, x, prompts, padding_mask, force_mask=False):

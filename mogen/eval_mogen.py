@@ -27,19 +27,19 @@ from mogen.data.ms_dataset import Text2MotionDatasetMS
 from mogen.models.vae.vae import VAE
 from mogen.core.eval import eval_molingo, eval_molingo_ms
 
-def load_vae_model(opt, ckpt_path, dim_pose, device):
+def load_vae_model(vae_opt, ckpt_path, dim_pose, device):
     vae_model = VAE(
         input_width=dim_pose,
-        output_emb_width=opt.output_emb_width,
-        down_t=opt.down_t,
-        stride_t=opt.stride_t,
-        width=opt.width,
-        depth=opt.depth,
-        dilation_growth_rate=opt.dilation_growth_rate,
-        activation=opt.activation,
-        norm=opt.norm,
-        pad_mode=opt.pad_mode,
-        ae=opt.ae,
+        output_emb_width=vae_opt.output_emb_width,
+        down_t=vae_opt.down_t,
+        stride_t=vae_opt.stride_t,
+        width=vae_opt.width,
+        depth=vae_opt.depth,
+        dilation_growth_rate=vae_opt.dilation_growth_rate,
+        activation=vae_opt.activation,
+        norm=vae_opt.norm,
+        pad_mode=vae_opt.pad_mode,
+        ae=vae_opt.ae,
     )
     vae_model.to(device)
     state_dict = torch.load(ckpt_path, map_location="cpu")["state_dict"]
@@ -86,8 +86,6 @@ if __name__ == '__main__':
 
     # create eval output file
     model_dir = pjoin('mogen/checkpoints', opt.dataset_name, f'pretrained_model_{dim_pose}')
-    model_path = pjoin(model_dir, f'model_best_fid.ckpt')
-
     opt_path = pjoin(model_dir, 'opt.txt')
     model_opt = get_opt(opt_path, device)
 
@@ -152,7 +150,7 @@ if __name__ == '__main__':
     partial_molingo = molingo_func()
 
     molingo_model = partial_molingo(vae_embed_dim=vae_embed_dim,
-                              token_size=model_opt.max_motion_length // ds_rate,
+                              token_size=opt.max_motion_length // ds_rate,
                               unit_length=ds_rate,
                               sample_steps=step,
                               t5_max_len=model_opt.t5_max_len,
@@ -160,10 +158,6 @@ if __name__ == '__main__':
                               ae=vae_opt.ae,
                               )
     molingo_model.to(device)
-
-    # total_params = sum(p.numel() for p in molingo_model.parameters())
-    # print(f"Total params: {total_params}")
-
     model_without_ddp = molingo_model
 
     # load molingo model
