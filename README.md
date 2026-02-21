@@ -9,7 +9,7 @@
     <a href='https://janericlenssen.github.io/' target='_blank'>Jan Eric Lenssen</a>&emsp;
     <a href='https://virtualhumans.mpi-inf.mpg.de/people/pons-moll.html' target='_blank'>Gerard Pons-Moll</a>&emsp;
     <br>
-    <strong>arXiv 2025</strong>
+    <strong>CVPR 2026</strong>
   </p>
 </p>
 
@@ -40,7 +40,8 @@ If you find our code or paper helpful, please consider starring our repository a
 
 ## News
 - [2025-12-15] Publish the paper on arXiv
-- [2026-02-16] Initial release of the MoLingo code
+- [2026-02-16] Evaluation scripts released
+- [2026-02-21] MoLingo is accepted to CVPR2026, see you in Denver!
 
 ## TODO
 - [x] Release the evaluation pipeline
@@ -73,7 +74,7 @@ Follow the instruction in [HumanML3D](https://github.com/EricGuo5513/HumanML3D.g
 
 **(b) HumanML3D-272 (272 dim)**
 
-Follow the instruction in [MotionStramer](https://github.com/zju3dv/MotionStreamer), download the processed 272-dim HumanML3D dataset (not BABEL), store in your own `data_root`
+Follow the instruction in [MotionStreamer](https://github.com/zju3dv/MotionStreamer), download the processed 272-dim HumanML3D dataset (not BABEL), store in your own `data_root`
 
 After processing, the directory structure:
 
@@ -107,6 +108,8 @@ bash prepare/download_glove.sh
 ```
 
 #### Set up TMR-263 evaluator
+
+**(Not required unless you are evaluating with the TMR-263 evaluator.)**
 
 Follow the instruction in [TMR](https://github.com/Mathux/TMR) (Installation - Set up the datasets), then copy the result dataset to directory `mogen/checkpoints/TMR`
 
