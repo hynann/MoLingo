@@ -41,7 +41,7 @@ If you find our code or paper helpful, please consider starring our repository a
 ## News
 - [2025-12-15] Publish the paper on arXiv
 - [2026-02-16] Evaluation scripts released
-- [2026-02-21] MoLingo is accepted to CVPR2026, see you in Denver!
+- [2026-02-21] MoLingo is accepted at CVPR 2026, see you in Denver!
 
 ## TODO
 - [x] Release the evaluation pipeline
@@ -165,7 +165,7 @@ Coming soon
 python mogen/eval_mogen.py -d 263 -c 5.5 -a 3 -r 20 -dr {your_data_root}
 ```
 
-### Evaluate the 272-dim model with TMR-263 and MS-272 evaluator:
+### Evaluate the 272-dim model with MS-272 evaluator:
 
 ```
 python mogen/eval_mogen.py -d 272 -c 7.0 -a 5 -r 20 -dr {your_data_root}
@@ -178,4 +178,4 @@ python mogen/eval_mogen.py -d 272 -c 7.0 -a 5 -r 20 -dr {your_data_root}
 
 This code is standing on the shoulders of giants, we would like to thank the following contributors that our code is based on:
 
-[MAR](https://github.com/LTH14/mar/),  [rectified-flow](https://github.com/lqiang67/rectified-flow/tree/main), [MoMask](https://github.com/EricGuo5513/momask-codes), [HumanML3D](https://github.com/EricGuo5513/HumanML3D), [MotionStreamer](https://github.com/zju3dv/MotionStreamer), [272-dim-Motion-Representation](https://github.com/Li-xingXiao/272-dim-Motion-Representation), [MARDM](https://github.com/neu-vi/MARDM)
+[MAR](https://github.com/LTH14/mar/), [TMR](https://github.com/Mathux/TMR/)  [rectified-flow](https://github.com/lqiang67/rectified-flow/tree/main), [MoMask](https://github.com/EricGuo5513/momask-codes), [HumanML3D](https://github.com/EricGuo5513/HumanML3D), [MotionStreamer](https://github.com/zju3dv/MotionStreamer), [272-dim-Motion-Representation](https://github.com/Li-xingXiao/272-dim-Motion-Representation), [MARDM](https://github.com/neu-vi/MARDM)
