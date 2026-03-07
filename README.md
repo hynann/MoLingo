@@ -1,44 +1,46 @@
+<!-- HEADER -->
 <p align="center">
-<h1><strong>MoLingo: Motion-Language Alignment for Text-to-Motion Generation</strong></h1>
-  <p align="center">
-    <a href='https://virtualhumans.mpi-inf.mpg.de/people/He.html' target='_blank'>Yannan He</a>&emsp;
-    <a href='https://garvita-tiwari.github.io/' target='_blank'>Garvita Tiwari</a>&emsp;
-    <a href='https://virtualhumans.mpi-inf.mpg.de/people/Zhang.html' target='_blank'>Xiaohan Zhang</a>&emsp;
-    <a href='https://www.linkedin.com/in/pankaj-bora-2045891b5/?originalSubdomain=de' target='_blank'>Pankaj Bora</a>&emsp;
-    <a href='https://tolgabirdal.github.io/' target='_blank'>Tolga Birdal</a>&emsp;
-    <a href='https://janericlenssen.github.io/' target='_blank'>Jan Eric Lenssen</a>&emsp;
-    <a href='https://virtualhumans.mpi-inf.mpg.de/people/pons-moll.html' target='_blank'>Gerard Pons-Moll</a>&emsp;
-    <br>
-    <strong>CVPR 2026</strong>
-  </p>
+    <h1 align="center">MoLingo: Motion-Language Alignment for Text-to-Motion Generation</h1>
+    <!-- authors -->
+    <p align="center">
+        <a href="https://virtualhumans.mpi-inf.mpg.de/people/He.html"><b>Yannan He</b></a>
+        &emsp;
+        <a href="https://garvita-tiwari.github.io"><b>Garvita Tiwari</b></a>
+        &emsp;
+        <a href="https://virtualhumans.mpi-inf.mpg.de/people/Zhang.html"><b>Xiaohan Zhang</b></a>
+        &emsp;
+        <a href="https://www.linkedin.com/in/pankaj-bora-2045891b5/?originalSubdomain=de"><b>Pankaj Bora</b></a>
+    </p>
+   <p align="center">
+        <a href="https://tolgabirdal.github.io"><b>Tolga Birdal</b></a>
+        &emsp;
+        <a href="https://janericlenssen.github.io"><b>Jan Eric Lenssen</b></a>
+        &emsp;
+        <a href="https://virtualhumans.mpi-inf.mpg.de/people/pons-moll.html"><b>Gerard Pons-Moll</b></a>
+    </p>
+    <!-- conference -->
+    <h3 align="center">CVPR 2026</h3>
+    <!-- teaser -->
+    <p align="center">
+        <img src="assets/teaser.gif" alt="Project Teaser" width="600px">
+    </p>
+    <!-- badges -->
+    <p align="center">
+        <a href="https://arxiv.org/abs/2512.13840">
+            <img src="https://img.shields.io/badge/arXiv-2512.13840-b31b1b.svg?style=for-the-badge" alt="Paper PDF">
+        </a>
+        &emsp;
+        <a href="https://hynann.github.io/molingo/MoLingo.html">
+            <img src="https://img.shields.io/badge/Project-Page-blue?style=for-the-badge&logo=Google%20chrome&logoColor=white" alt="Project Page">
+        </a>
+    </p>
 </p>
 
-</p>
-<p align="center">
-  <a href='https://arxiv.org/abs/2512.13840'>
-    <img src='https://img.shields.io/badge/Arxiv-2512.13840-A42C25?style=flat&logo=arXiv&logoColor=A42C25'></a>
-  <!-- <a href='https://arxiv.org/pdf/xxxx.xxxxx.pdf'>
-    <img src='https://img.shields.io/badge/Paper-PDF-yellow?style=flat&logo=arXiv&logoColor=yellow'></a> -->
-<a href='https://hynann.github.io/molingo/MoLingo.html'>
-    <img src='https://img.shields.io/badge/Project-Page-green?style=flat&logo=Google%20chrome&logoColor=green'></a>
-</p>
-
-![](./assets/teaser.gif)
-
-If you find our code or paper helpful, please consider starring our repository and citing:
-```
-@inproceedings{he2026molingo,
-      title={MoLingo: Motion–Language Alignment for Text-to-Human Motion Generation},
-      author={He, Yannan and Tiwari, Garvita and Zhang, Xiaohan and Bora, Pankaj and Birdal, Tolga and Lenssen, Jan Eric and Pons-Moll, Gerard},
-      booktitle={CVPR},
-      year={2026}
-  }
-```
 
 ## News
 
 - [2026-03-07] **Note: We have updated the pre-trained 272-dimensional model and its SAE with better checkpoints. If you downloaded the version from the initial commit, please run ```prepare/download_models.sh``` again to get the latest version.**
-- [2026-03-07] Motion generation demo released.
+- [2026-03-07] Motion generation demo released, **pull the latest version and give it a try!**
 - [2026-02-21] MoLingo is accepted at CVPR 2026!
 - [2026-02-16] Evaluation scripts released
 - [2025-12-15] Publish the paper on arXiv
@@ -201,3 +203,16 @@ python mogen/eval_mogen.py -d 272 -c 7.0 -a 5 -r 20 -dr {your_data_root}
 This code is standing on the shoulders of giants, we would like to thank the following contributors that our code is based on:
 
 [MAR](https://github.com/LTH14/mar/), [TMR](https://github.com/Mathux/TMR/),  [rectified-flow](https://github.com/lqiang67/rectified-flow/tree/main), [MoMask](https://github.com/EricGuo5513/momask-codes), [HumanML3D](https://github.com/EricGuo5513/HumanML3D), [MotionStreamer](https://github.com/zju3dv/MotionStreamer), [272-dim-Motion-Representation](https://github.com/Li-xingXiao/272-dim-Motion-Representation), [MARDM](https://github.com/neu-vi/MARDM)
+
+
+## Citation
+
+If you find our code or paper helpful, please consider starring our repository and citing:
+```
+@inproceedings{he2026molingo,
+      title={MoLingo: Motion–Language Alignment for Text-to-Human Motion Generation},
+      author={He, Yannan and Tiwari, Garvita and Zhang, Xiaohan and Bora, Pankaj and Birdal, Tolga and Lenssen, Jan Eric and Pons-Moll, Gerard},
+      booktitle={CVPR},
+      year={2026}
+  }
+```
