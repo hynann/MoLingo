@@ -1,68 +1,21 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import warnings
 
 import torch.distributions as dist
 
 from typing import Any, Callable, Dict, List, Optional, Union, Tuple
+from dataclasses import dataclass
 
-from mogen.models.rf.flow_components.interpolation_solver import AffineInterp
-from mogen.models.rf.flow_components.train_time_sampler import TrainTimeSampler
-from mogen.models.rf.flow_components.train_time_weight import TrainTimeWeight
-from mogen.models.rf.flow_components.loss_function import RectifiedFlowLossFunction
-from mogen.models.rf.utils import match_dim_with_data
-from mogen.models.rf.rectified_flow import RectifiedFlow
-
-
-class RectifiedFlowLossFunctionMeanFlat:
-    def __init__(
-        self,
-        loss_type: str = "mse",
-    ):
-        """
-        Initialize the loss function.
-
-        Args:
-            loss_type (str): Type of loss to use. Default is "mse".
-        """
-        self.loss_type = loss_type
-
-    def __call__(
-        self,
-        v_t: torch.Tensor,
-        dot_x_t: torch.Tensor,
-        x_t: torch.Tensor,
-        t: torch.Tensor,
-        time_weights: torch.Tensor,
-    ) -> torch.Tensor:
-        """
-        Compute the loss for rectified flow.
-
-        Args:
-            v_t (torch.Tensor): Predicted velocity tensor.
-            dot_x_t (torch.Tensor): Ground truth velocity tensor.
-            x_t (torch.Tensor): State tensor.
-            t (torch.Tensor): Time tensor.
-            time_weights (torch.Tensor): Weights for each time step.
-
-        Returns:
-            torch.Tensor: Computed loss value.
-        """
-
-        if self.loss_type == "mse":
-            per_instance_loss = torch.mean(
-                (v_t - dot_x_t) ** 2, dim=list(range(1, v_t.dim()))
-            )
-            loss = per_instance_loss
-        else:
-            raise NotImplementedError(
-                f"Loss function '{self.loss_type}' is not implemented."
-            )
-
-        return loss
+from .flow_components.interpolation_solver import AffineInterp
+from .flow_components.train_time_sampler import TrainTimeSampler
+from .flow_components.train_time_weight import TrainTimeWeight
+from .flow_components.loss_function import RectifiedFlowLossFunction
+from .utils import match_dim_with_data
 
 
-class RectifiedFlowMeanFlat(RectifiedFlow):
+class RectifiedFlow:
     def __init__(
         self,
         data_shape: tuple,
@@ -106,15 +59,63 @@ class RectifiedFlowMeanFlat(RectifiedFlow):
                 Loss function used for training.
                 Can be an instance of `RectifiedFlowLossFunction` or a string specifying the loss type.
         """
-        super().__init__(data_shape=data_shape, velocity_field=velocity_field, interp=interp, source_distribution=source_distribution,
-                         is_independent_coupling=is_independent_coupling, train_time_distribution=train_time_distribution,
-                         train_time_weight=train_time_weight, criterion=criterion, device=device, dtype=dtype)
-
-        self.criterion: RectifiedFlowLossFunctionMeanFlat = (
-            criterion
-            if isinstance(criterion, RectifiedFlowLossFunctionMeanFlat)
-            else RectifiedFlowLossFunctionMeanFlat(criterion)
+        self.data_shape = (
+            tuple(data_shape)
+            if isinstance(data_shape, (list, tuple))
+            else (data_shape,)
         )
+        self.velocity_field = velocity_field
+
+        self.interp: AffineInterp = (
+            interp if isinstance(interp, AffineInterp) else AffineInterp(interp)
+        )
+        self.train_time_sampler: TrainTimeSampler = (
+            train_time_distribution
+            if isinstance(train_time_distribution, TrainTimeSampler)
+            else TrainTimeSampler(train_time_distribution)
+        )
+        self.train_time_weight: TrainTimeWeight = (
+            train_time_weight
+            if isinstance(train_time_weight, TrainTimeWeight)
+            else TrainTimeWeight(train_time_weight)
+        )
+        self.criterion: RectifiedFlowLossFunction = (
+            criterion
+            if isinstance(criterion, RectifiedFlowLossFunction)
+            else RectifiedFlowLossFunction(criterion)
+        )
+
+        self.device = torch.device(device) if isinstance(device, str) else device
+        self.dtype = torch.dtype(dtype) if isinstance(dtype, str) else dtype
+
+        self.pi_0 = source_distribution
+        if self.pi_0 == "normal":
+            self.pi_0 = dist.Normal(
+                torch.tensor(0, device=device, dtype=dtype),
+                torch.tensor(1, device=device, dtype=dtype),
+            ).expand(data_shape)
+        elif isinstance(self.pi_0, dist.Distribution):
+            if (
+                self.pi_0.mean.device != self.device
+                or self.pi_0.stddev.device != self.device
+            ):
+                warnings.warn(
+                    f"[Device Mismatch] The source distribution is on device "
+                    f"{self.pi_0.mean.device}, while the model expects device {self.device}. "
+                    f"Ensure that the distribution and model are on the same device."
+                )
+            if (
+                self.pi_0.mean.dtype != self.dtype
+                or self.pi_0.stddev.dtype != self.dtype
+            ):
+                warnings.warn(
+                    f"[Dtype Mismatch] The source distribution uses dtype "
+                    f"{self.pi_0.mean.dtype}, while the model expects dtype {self.dtype}. "
+                    f"Consider converting the distribution to match the model's dtype."
+                )
+
+        self.independent_coupling = is_independent_coupling
+
     def sample_train_time(self, batch_size: int, expand_dim: bool = True):
         r"""This method calls the `TrainTimeSampler` to sample training times.
 
@@ -233,8 +234,6 @@ class RectifiedFlowMeanFlat(RectifiedFlow):
                 A scalar tensor representing the computed loss value.
         """
         t = self.sample_train_time(x_1.shape[0]) if t is None else t
-        # print(f't inside initial shape {t.shape}')
-        # print(f'x_1 shape {x_1.shape}')
 
         if x_0 is None:
             if self.is_independent_coupling:
@@ -244,10 +243,7 @@ class RectifiedFlowMeanFlat(RectifiedFlow):
                     "x_0 is not provided and is not independent coupling. Sampling from pi_0 might not be correct."
                 )
 
-        # print(f'x_0 shape {x_0.shape}')
         x_t, dot_x_t = self.get_interpolation(x_0, x_1, t)
-        # print(f'x_t shape {x_t.shape}')
-        # print(f'dot_x_t shape {dot_x_t.shape}')
         v_t = self.get_velocity(x_t, t, **kwargs)
         time_weights = self.train_time_weight(t)
 

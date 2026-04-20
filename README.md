@@ -39,6 +39,7 @@
 
 ## News
 
+- [2026-04-20] Training scripts for the SAE and the generation model released.
 - [2026-03-07] **Note: We have updated the pre-trained 272-dimensional model and its SAE with better checkpoints. If you downloaded the version from the initial commit, please run ```prepare/download_models.sh``` again to get the latest version.**
 - [2026-03-07] Motion generation demo released, **pull the latest version and give it a try!**
 - [2026-02-21] MoLingo is accepted at CVPR 2026!
@@ -49,8 +50,8 @@
 ## TODO
 - [x] Release the evaluation pipeline
 - [x] Release the motion generation pipeline
-- [ ] Release the training script for the SAE
-- [ ] Release the training script for the MoLingo model
+- [x] Release the training script for the SAE
+- [x] Release the training script for the MoLingo model
 - [ ] Release the G1 tracking pipeline
 
 
@@ -154,9 +155,53 @@ bash prepare/download_models.sh
 
 </details>
 
+## Train Your Own SAE
+
+<details>
+
+First, download the pre-computed HumanML3D-BABEL frame-level features from [this link](https://nc.mlcloud.uni-tuebingen.de/index.php/s/Zkzt7axKmAMeLqQ?openfile=true), then unzip and place them under `{data_root}/HumanML3D_272`. Once extracted, the folder structure should look like:
+
+```
+data_root
+└── HumanML3D_272
+    ├── mean_std
+    ├── motion_data
+    ├── split
+    ├── texts
+    └── babel_272_annotation_t5
+```
+
+Then, run the following line to start the training:
+
+```
+python mogen/train_sae.py --data_root {data_root}
+```
+
+* Set `data_root` to the path you processed in the previous steps.
+* Checkpoints are saved to `mogen/checkpoints/ms/{vae_name}`.
+
+</details>
+
+## Train Your Own MoLingo Model
+
+<details>
+
+```
+torchrun --standalone --nnodes=1 --nproc_per_node=4 mogen/train_molingo.py --data_root {data_root} --vae {vae_name} --batch_size {batch_size}
+```
+
+* Set `data_root` to the path you processed in the previous steps.
+* Set `vae_name` to the name of the SAE checkpoint folder in the previous step.
+* Checkpoints are saved to `mogen/checkpoints/ms/{exp_name}`.
+* Tested on 4× 40GB A100 and 4× 80GB H100 GPUs. Use a per-GPU batch size of 32 on A100 and 64 on H100.
+
+</details>
+
 ## Demo
 
 <details>
+
+Motion generation can be run on a single NVIDIA GeForce RTX 3090 GPU.
 
 ```
 python mogen/demo.py -a 1 -i assets/example.txt -b {your_smpl_model_path}

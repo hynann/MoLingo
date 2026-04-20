@@ -291,7 +291,6 @@ dependencies:
       - python-dateutil==2.9.0.post0
       - pytorch-lightning==2.5.2
       - pytz==2025.2
-      - rectified-flow==1.0.1
       - regex==2024.11.6
       - rich==14.2.0
       - safetensors==0.5.3

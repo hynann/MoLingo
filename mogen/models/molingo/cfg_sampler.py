@@ -1,8 +1,8 @@
 import torch
 import warnings
-from rectified_flow.samplers.base_sampler import Sampler
-from rectified_flow.rectified_flow import RectifiedFlow
-from rectified_flow.utils import set_seed
+from mogen.models.rf.samplers.base_sampler import Sampler
+from mogen.models.rf.rectified_flow import RectifiedFlow
+from mogen.models.rf.utils import set_seed
 from typing import Callable
 
 class CFGSampler(Sampler):

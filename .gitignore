@@ -124,6 +124,3 @@ mogen/checkpoints/TMR
 mogen/checkpoints/ms/epoch=99.ckpt
 mogen/checkpoints/ms/sae_ms_l2_4_16_1024_d3_kl_1e-05_zero
 mogen/checkpoints/ms/pretrained_model_272
-mogen/options
-mogen/train_sae.py
-mogen/core/sae_trainer.py

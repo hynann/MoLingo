@@ -108,3 +108,22 @@ def plot_3d_motion(save_path, kinematic_tree, joints, title,
     writer = FFMpegWriter(fps=fps, bitrate=1800)
     ani.save(save_path, writer=writer)
     plt.close(fig)
+
+
+def plot_single_motion(joint, save_path, fps):
+    from mogen.utils import paramUtil
+    plot_3d_motion(save_path, paramUtil.t2m_kinematic_chain, joint, title='None', fps=fps, radius=4)
+
+
+def plot_t2m(data, save_dir, captions, m_lengths, joints_num=22, fps=30, radius=4):
+    import torch
+    from os.path import join as pjoin
+    from mogen.utils import paramUtil
+    from mogen.utils.motion_representation import recover_from_ric
+
+    tail = '.mp4'
+    for i, (caption, joint_data) in enumerate(zip(captions, data)):
+        joint_data = joint_data[:m_lengths[i]]
+        joint = recover_from_ric(torch.from_numpy(joint_data).float(), joints_num).numpy()
+        save_path = pjoin(save_dir, str(i).zfill(2) + tail)
+        plot_3d_motion(save_path, paramUtil.t2m_kinematic_chain, joint, title=caption, fps=fps, radius=radius)

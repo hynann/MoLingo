@@ -8,7 +8,7 @@ from typing import List, Optional, Union
 from torch import nn, Tensor
 from torch.distributions.distribution import Distribution
 
-from models.operator.position_encoding_layer import PositionalEncoding
+from mogen.models.operator.position_encoding_layer import PositionalEncoding
 
 
 class ActorAgnosticEncoder(pl.LightningModule):
